@@ -12,6 +12,7 @@
   "background": {
     "service_worker": "background.js"
   },
+  "host_permissions": ["https://api.openai.com/*"],
   "action": {
     "default_title": "Cw Metrics Gpt",
     "default_popup": "popup.html"

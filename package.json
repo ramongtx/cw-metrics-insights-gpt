@@ -19,9 +19,10 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@vespaiach/axios-fetch-adapter": "^0.3.1",
-    "axios": "^0.27.2",
-    "openai": "^3.2.1",
     "regenerator-runtime": "^0.13.11"
+  },
+  "browser": {
+    "path": false,
+    "stream": false
   }
 }

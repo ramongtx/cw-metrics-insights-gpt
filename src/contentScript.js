@@ -9,14 +9,17 @@ function runQuery(editorContentArea) {
       },
     },
     (response) => {
-      if (response.message.includes('```')) {
-        response.message = response.message.split('```')[1].replace(/\n/, '');
+      if (response?.error?.message) {
+        alert('OpenAI: ' + response.error.message);
+      } else if (response?.choices?.length > 0) {
+        const text = response.choices[0].text
+        editorContentArea.innerText = text;
       }
 
-      console.log(response.message);
+      console.log(response);
     }
   );
-};
+}
 
 function addConvertButton(buttonCallback) {
   const runButton = document.querySelectorAll('[data-test-id="run-query-button"]')[0];
@@ -45,9 +48,9 @@ const interval = setInterval(() => {
   }
 
   if (editorContentArea) {
-    clearInterval(interval);
     addConvertButton(() => {
       runQuery(editorContentArea);
-    })
+    });
+    clearInterval(interval);
   }
 }, 1000);
