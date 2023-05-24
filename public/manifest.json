@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CloudWatch Metrics Gpt",
   "version": "0.1.0",
-  "description": "My Chrome Extension",
+  "description": "Chrome extension that generates CloudWatch Metrics Insights queries from ChatGPT prompts",
   "icons": {
     "16": "icons/icon_16.png",
     "32": "icons/icon_32.png",
@@ -14,7 +14,7 @@
   },
   "host_permissions": ["https://api.openai.com/*"],
   "action": {
-    "default_title": "Cw Metrics Gpt",
+    "default_title": "CW Metrics Gpt",
     "default_popup": "popup.html"
   },
   "permissions": [
