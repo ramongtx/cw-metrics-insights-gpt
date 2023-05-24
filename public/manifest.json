@@ -9,12 +9,27 @@
     "48": "icons/icon_48.png",
     "128": "icons/icon_128.png"
   },
+  "web_accessible_resources": [
+      {
+          "resources": [
+            "editor.js"
+          ],
+          "matches": [
+            "<all_urls>"
+          ]
+      }
+  ],
+  "externally_connectable": {
+    "matches": [
+      "https://*.console.aws.amazon.com/cloudwatch/home*"
+    ]
+  },
   "background": {
     "service_worker": "background.js"
   },
   "host_permissions": ["https://api.openai.com/*"],
   "action": {
-    "default_title": "CW Metrics Gpt",
+    "default_title": "CW Metrics GPT",
     "default_popup": "popup.html"
   },
   "permissions": [

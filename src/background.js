@@ -29,7 +29,6 @@ async function requestPrompt(apiKey, prompt, callback) {
         },
     });
   const responseJson = await response.json();
-  console.log(responseJson);
   callback(responseJson);
 }
 
@@ -38,9 +37,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     chrome.storage.sync.get(['apiKey'], (result) => {
       const apiKey = result.apiKey;
       const userQuery = request.payload.query;
-
-      console.log("q", userQuery);
-      console.log("k", apiKey);
 
       const prompt = `Translate this to CloudWatch Metrics Insights query language: ${userQuery}. Respond with only the query.`;
 

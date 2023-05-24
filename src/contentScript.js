@@ -1,6 +1,21 @@
 'use strict';
 
 function runQuery(inputText, callback) {
+  if (inputText === 'test') {
+    runTestQuery(inputText, callback);
+  } else {
+    runOpenAIQuery(inputText, callback);
+  }
+}
+
+function runTestQuery(inputText, callback) {
+  const interval = setInterval(() => {
+    callback('SELECT COUNT(CallCount)\nFROM "AWS/Usage"\nWHERE "Type" = \'API\'\nGROUP BY "Service", "Resource"\nORDER BY SUM() DESC LIMIT 20');
+    clearInterval(interval);
+  }, 1000);
+}
+
+function runOpenAIQuery(inputText, callback) {
   chrome.runtime.sendMessage(
     {
       type: 'QUERY',
@@ -10,25 +25,29 @@ function runQuery(inputText, callback) {
     },
     (response) => {
       if (response?.error?.message) {
-        alert('OpenAI: ' + response.error.message);
+        alert('OpenAI error message: ' + response.error.message);
+        callback();
+      } else if (response?.error?.code) {
+        alert('OpenAI error code: ' + response.error.code);
+        callback();
       } else if (response?.choices?.length > 0) {
         const text = response.choices[0]?.message?.content || inputText;
         callback(text);
       }
-
-      console.log(response);
     }
   );
 }
 
 function disableButton(convertButton) {
   convertButton.disabled = true;
-  convertButton.firstChild.firstChild.innerText = "Loading... Please wait"
+  convertButton.firstChild.firstChild.innerText = "Loading... Please wait";
+  convertButton.firstChild.classList.add('awsui-button-disabled');
 }
 
 function enableButton(convertButton) {
   convertButton.disabled = false;
-  convertButton.firstChild.firstChild.innerText = "Convert with ChatGPT"
+  convertButton.firstChild.firstChild.innerText = "Convert with ChatGPT";
+  convertButton.firstChild.classList.remove('awsui-button-disabled');
 }
 
 function createConvertButton() {
@@ -42,32 +61,57 @@ function createConvertButton() {
   return convertButton;
 }
 
-function setupButtonListener(convertButton, editorContentArea) {
+function setupButtonListener(convertButton, aceEditor) {
   convertButton.addEventListener('click', () => {
     disableButton(convertButton)
-    runQuery(editorContentArea.innerText, (text) => {
-      editorContentArea.innerText = text;
+    runQuery(aceEditor.innerText.replace(/[\r\n]+/g,' '), (text) => {
+      if (text) {
+        writeToAceEditor(text);
+      }
       enableButton(convertButton)
     });
   });
 }
 
-const interval = setInterval(() => {
-  console.log("Plugin running...")
-  const editor = document.getElementsByClassName('query-editor-ace');
-  let editorContentArea = document.getElementsByClassName('ace_content');
+function writeToAceEditor(text) {
+  window.postMessage({
+    type: 'MI_GTP_EXTENSION_EVENT',
+    text,
+  }, "*");
+}
 
-  if (editor.length > 0 && editorContentArea.length > 0) {
-    editorContentArea = editorContentArea[0];
-    console.log("Editor found");
-  } else {
-    console.log("Editor NOT found");
-    return;
-  }
+function embedEditorHelperScript() {
+  var s = document.createElement('script');
+  s.src = chrome.runtime.getURL('editor.js');
+  (document.head || document.documentElement).appendChild(s);
+  s.onload = function() {
+      s.remove();
+  };
+}
 
-  if (editorContentArea) {
-    const convertButton = createConvertButton();
-    setupButtonListener(convertButton, editorContentArea);
-    clearInterval(interval);
-  }
-}, 1000);
+function isInSQLEditorPage() {
+  return document.getElementsByClassName('query-editor-ace').length > 0;
+}
+
+function main() {
+  const interval = setInterval(() => {
+    if (!isInSQLEditorPage()) {
+      return;
+    }
+
+    let aceEditor = document.getElementsByClassName('ace_content');
+    if (!(aceEditor.length > 0)) {
+      return;
+    }
+    aceEditor = aceEditor[0];
+
+    if (aceEditor) {
+      const convertButton = createConvertButton();
+      setupButtonListener(convertButton, aceEditor);
+      clearInterval(interval);
+    }
+  }, 1000);
+}
+
+embedEditorHelperScript();
+main();
