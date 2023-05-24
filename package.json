@@ -1,7 +1,7 @@
 {
-  "name": "cw-logs-gpt",
+  "name": "cw-metrics-insights-gpt",
   "version": "0.1.0",
-  "description": "My Chrome Extension",
+  "description": "Chrome extension that generates CloudWatch Metrics Insights queries from ChatGPT prompts",
   "private": true,
   "scripts": {
     "watch": "webpack --mode=development --watch --config config/webpack.config.js",
