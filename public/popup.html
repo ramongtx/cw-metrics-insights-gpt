@@ -7,11 +7,13 @@
   </head>
   <body>
     <div class="app">
-      <p class="apiKey-label">API Key</p>
-      <input type="text" id="apiKey" class="apiKey"></input>
+      <h2 class="apiKey-label">API Key</h2>
+      <input type="text" id="apiKey" class="apiKey" placeholder="Your openAI key"></input>
       <div class="button-container">
         <button id="saveBtn" class="button">Save</button>
+        <button id="clearBtn" class="button">Clear</button>
       </div>
+      <p class="logMessage" id="logMessage"></p>
     </div>
 
     <script src="popup.js"></script>

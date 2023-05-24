@@ -41,6 +41,8 @@ import './popup.css';
 
     apiKeyStorage.set(newApiKey, () => {
       console.log('Set apiKey to %s', newApiKey)
+      document.getElementById('logMessage').innerHTML = "The Key is setted up successfully"
+      document.getElementById('logMessage').style.display = 'flex'
     });
   }
 
@@ -60,3 +62,11 @@ import './popup.css';
 
   document.addEventListener('DOMContentLoaded', restoreApiKey);
 })();
+
+function clearTextField() { 
+  document.getElementById('apiKey').value = '';
+  document.getElementById('logMessage').style.display = "none"
+}
+
+const clearBtb = document.getElementById('clearBtn')
+clearBtb.addEventListener('click', clearTextField)
