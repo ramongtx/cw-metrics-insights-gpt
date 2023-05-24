@@ -1,19 +1,19 @@
 'use strict';
 
-function runQuery(editorContentArea) {
+function runQuery(inputText, callback) {
   chrome.runtime.sendMessage(
     {
       type: 'QUERY',
       payload: {
-        query: editorContentArea.innerText,
+        query: inputText,
       },
     },
     (response) => {
       if (response?.error?.message) {
         alert('OpenAI: ' + response.error.message);
       } else if (response?.choices?.length > 0) {
-        const text = response.choices[0].text
-        editorContentArea.innerText = text;
+        const text = response.choices[0]?.message?.content || inputText;
+        callback(text);
       }
 
       console.log(response);
@@ -21,17 +21,35 @@ function runQuery(editorContentArea) {
   );
 }
 
-function addConvertButton(buttonCallback) {
+function disableButton(convertButton) {
+  convertButton.disabled = true;
+  convertButton.firstChild.firstChild.innerText = "Loading... Please wait"
+}
+
+function enableButton(convertButton) {
+  convertButton.disabled = false;
+  convertButton.firstChild.firstChild.innerText = "Convert with ChatGPT"
+}
+
+function createConvertButton() {
   const runButton = document.querySelectorAll('[data-test-id="run-query-button"]')[0];
 
   //find element by innerText
-  const clone = runButton.cloneNode(true);
-  clone.firstChild.firstChild.innerText = "Convert with ChatGPT"
-  clone.addEventListener('click', () => {
-    buttonCallback();
+  const convertButton = runButton.cloneNode(true);
+  convertButton.firstChild.firstChild.innerText = "Convert with ChatGPT";
+  convertButton.classList.add('submit-button-clone');
+  runButton.parentNode.insertBefore(convertButton, runButton.nextSibling);
+  return convertButton;
+}
+
+function setupButtonListener(convertButton, editorContentArea) {
+  convertButton.addEventListener('click', () => {
+    disableButton(convertButton)
+    runQuery(editorContentArea.innerText, (text) => {
+      editorContentArea.innerText = text;
+      enableButton(convertButton)
+    });
   });
-  clone.classList.add('submit-button-clone');
-  runButton.parentNode.insertBefore(clone, runButton.nextSibling);
 }
 
 const interval = setInterval(() => {
@@ -48,9 +66,8 @@ const interval = setInterval(() => {
   }
 
   if (editorContentArea) {
-    addConvertButton(() => {
-      runQuery(editorContentArea);
-    });
+    const convertButton = createConvertButton();
+    setupButtonListener(convertButton, editorContentArea);
     clearInterval(interval);
   }
 }, 1000);

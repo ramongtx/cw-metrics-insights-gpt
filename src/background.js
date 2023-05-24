@@ -5,11 +5,21 @@ require("regenerator-runtime/runtime");
 async function requestPrompt(apiKey, prompt, callback) {
   const openAiRequest = {
     model: "gpt-3.5-turbo",
-    prompt,
-    temperature: 0.5,
-    max_tokens: 1000,
+    messages: [
+        {
+            role: "user",
+            content: prompt
+        }
+    ],
+    temperature: 1,
+    top_p: 1,
+    n: 1,
+    stream: false,
+    max_tokens: 250,
+    presence_penalty: 0,
+    frequency_penalty: 0
   };
-  const response = await fetch('https://api.openai.com/v1/completions',
+  const response = await fetch('https://api.openai.com/v1/chat/completions',
     {
         body: JSON.stringify(openAiRequest),
         method: "POST",
