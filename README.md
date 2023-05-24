@@ -1,8 +1,8 @@
-# CloudWatch Logs Insights ChatGPT 
+# CloudWatch Metrics Insights ChatGPT 
 
 ## Features
 
-- Chrome extension that generates CloudWatch Logs Insights queries from ChatGPT prompts
+- Chrome extension that generates CloudWatch Metrics Insights queries from ChatGPT prompts
 - Simply start typing inside double quotes (") and you'll see a 'Convert to query' button.
 
 ![Demo](./images/demo.gif)
@@ -10,10 +10,6 @@
 ## Install
 * Go to [OpenAI](https://platform.openai.com/account/api-keys) and create an API key
 * Clone this repo
-* Create file `src/apiKey.js` with the following content
-```
-  export const apiKey = '<your openai api key>';
-```
 * run `npm install && npm run build`
 * Open chrome://extensions
 * Enable the "Developer mode" toggle 

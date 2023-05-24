@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "CloudWatch Logs Gpt",
+  "name": "CloudWatch Metrics Gpt",
   "version": "0.1.0",
   "description": "My Chrome Extension",
   "icons": {
@@ -13,7 +13,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Cw Logs Gpt",
+    "default_title": "Cw Metrics Gpt",
     "default_popup": "popup.html"
   },
   "permissions": [
