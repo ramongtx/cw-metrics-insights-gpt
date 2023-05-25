@@ -13,9 +13,17 @@ const EXAMPLE_12 = `This is example Metrics insights query to find max 20 metric
 const EXAMPLE_13 = `This is example Metrics insights query to find Top 20 AWS APIs Usage by the number of calls in account. 'SELECT COUNT(CallCount) FROM "AWS/Usage" WHERE Type = 'API' GROUP BY Service, Resource ORDER BY COUNT() DESC LIMIT 20'`
 const EXAMPLE_14 = `This is example Metrics insights query to find 20 max metrics of cpu from aws ec2 service group by id by highest. 'SELECT MAX(CPUUtilization) FROM "AWS/EC2" GROUP BY InstanceId ORDER BY MAX() DESC LIMIT 20'`
 const EXAMPLE_15 = `This is example Metrics insights query to find top 20 avg metric of memory utilazation from ecs service group by cluster name. 'SELECT AVG(MemoryUtilization) FROM "AWS/ECS" GROUP BY ClusterName ORDER BY AVG() DESC LIMIT 20'`
+const EXAMPLE_16 = `This is example Metrics insights query to find top 10 cpu for ec2. 'SELECT AVG(CPUUtilization) FROM "AWS/EC2" GROUP BY InstanceId ORDER BY AVG() DESC LIMIT 10'`
+const EXAMPLE_17 = `This is example Metrics insights query to find top 10 invocations for lambda. 'SELECT SUM(Invocations) FROM "AWS/Lambda" GROUP BY FunctionName ORDER BY SUM() DESC LIMIT 10'`
+const EXAMPLE_18 = `This is example Metrics insights query to find top 10 memory use for aws ecs. 'SELECT MAX(MemoryUtilization) FROM "AWS/ECS" GROUP BY ClusterName ORDER BY MAX() DESC LIMIT 10'`
+
+
+
+
+
 
 var PROMPT_PREFIX = `This is example Metrics insights query to find the top 10 MAX EndToEndLatency metrics of namespace Cell-Alpha/Guppy/E2ECanary group by PartitionId order by MAX. 'SELECT MAX(EndToEndLatency) FROM "Cell-Alpha/Guppy/E2ECanary" GROUP BY PartitionId ORDER BY MAX() DESC LIMIT 10'. `
-PROMPT_PREFIX += `${EXAMPLE_1} /n ${EXAMPLE_2} /n ${EXAMPLE_3} /n ${EXAMPLE_4} /n ${EXAMPLE_5} /n ${EXAMPLE_6} /n ${EXAMPLE_7} /n ${EXAMPLE_8} /n ${EXAMPLE_9} /n ${EXAMPLE_10} /n ${EXAMPLE_11} /n ${EXAMPLE_12} /n ${EXAMPLE_13} /n ${EXAMPLE_14} /n ${EXAMPLE_15} /n`
+PROMPT_PREFIX += `${EXAMPLE_1} /n ${EXAMPLE_2} /n ${EXAMPLE_3} /n ${EXAMPLE_4} /n ${EXAMPLE_5} /n ${EXAMPLE_6} /n ${EXAMPLE_7} /n ${EXAMPLE_8} /n ${EXAMPLE_9} /n ${EXAMPLE_10} /n ${EXAMPLE_11} /n ${EXAMPLE_12} /n ${EXAMPLE_13} /n ${EXAMPLE_14} /n ${EXAMPLE_15} /n ${EXAMPLE_16} /n ${EXAMPLE_17} /n ${EXAMPLE_18} /n`
 PROMPT_PREFIX += `Please follow the syntax and translate this to CloudWatch Metrics Insights query language:`
 const PROMPT_SUBFIX = "Respond with only the query."
 
