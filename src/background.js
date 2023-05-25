@@ -1,6 +1,6 @@
 'use strict';
 
-const { PROMPT_SUBFIX } = require("./constants");
+const { PROMPT_SUBFIX, PROMPT_PREFIX } = require("./constants");
 
 require("regenerator-runtime/runtime");
 
