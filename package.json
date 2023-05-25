@@ -1,6 +1,6 @@
 {
   "name": "cw-metrics-insights-gpt",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Chrome extension that generates CloudWatch Metrics Insights queries from ChatGPT prompts",
   "private": true,
   "scripts": {

@@ -1,5 +1,7 @@
 'use strict';
 
+const { PROMPT_SUBFIX } = require("./constants");
+
 require("regenerator-runtime/runtime");
 
 async function requestPrompt(apiKey, prompt, callback) {
@@ -38,7 +40,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const apiKey = result.apiKey;
       const userQuery = request.payload.query;
 
-      const prompt = `Translate this to CloudWatch Metrics Insights query language: ${userQuery}. Respond with only the query.`;
+      const prompt = `${PROMPT_PREFIX} ${userQuery} ${PROMPT_SUBFIX}`;
 
       requestPrompt(apiKey, prompt, (responseJson) => {
         sendResponse(responseJson);
