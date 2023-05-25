@@ -3,31 +3,7 @@
 import './popup.css';
 
 (function () {
-  // We will make use of Storage API to get and store `apiKey` value
-  // More information on Storage API can we found at
-  // https://developer.chrome.com/extensions/storage
-
-  // To get storage access, we have to mention it in `permissions` property of manifest.json file
-  // More information on Permissions can we found at
-  // https://developer.chrome.com/extensions/declare_permissions
-  const apiKeyStorage = {
-    get: (cb) => {
-      chrome.storage.sync.get(['apiKey'], (result) => {
-        console.log('Got apiKey = %s', result.apiKey)
-        cb(result.apiKey);
-      });
-    },
-    set: (value, cb) => {
-      chrome.storage.sync.set(
-        {
-          apiKey: value,
-        },
-        () => {
-          cb();
-        }
-      );
-    },
-  };
+  const { getApiKey, setApiKey } = require('./storage');
 
   function setupApiKey(initialValue = '') {
     document.getElementById('apiKey').value = initialValue;
@@ -36,37 +12,32 @@ import './popup.css';
     });
   }
 
-  function updateApiKey() {
+  async function updateApiKey() {
     const newApiKey = document.getElementById('apiKey').value;
 
-    apiKeyStorage.set(newApiKey, () => {
-      console.log('Set apiKey to %s', newApiKey)
-      document.getElementById('logMessage').innerHTML = "The Key is setted up successfully"
-      document.getElementById('logMessage').style.display = 'flex'
-    });
+    await setApiKey(newApiKey);
+    document.getElementById('logMessage').innerHTML = "The key was saved :)"
+    document.getElementById('logMessage').style.display = 'flex';
   }
 
-  function restoreApiKey() {
+  async function restoreApiKey() {
     // Restore apiKey value
-    apiKeyStorage.get((apiKey) => {
-      if (typeof apiKey === 'undefined') {
-        // Set apiKey value as ''
-        apiKeyStorage.set('', () => {
-          setupApiKey('');
-        });
-      } else {
-        setupApiKey(apiKey);
-      }
-    });
+    const apiKey = await getApiKey();
+    if (typeof apiKey === 'undefined') {
+      setupApiKey('');
+    } else {
+      setupApiKey(apiKey);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', restoreApiKey);
+
+  function clearTextField() {
+    document.getElementById('apiKey').value = '';
+    document.getElementById('logMessage').style.display = "none";
+    setApiKey('');
+  }
+
+  const clearBtb = document.getElementById('clearBtn');
+  clearBtb.addEventListener('click', clearTextField);
 })();
-
-function clearTextField() { 
-  document.getElementById('apiKey').value = '';
-  document.getElementById('logMessage').style.display = "none"
-}
-
-const clearBtb = document.getElementById('clearBtn')
-clearBtb.addEventListener('click', clearTextField)

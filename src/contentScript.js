@@ -1,5 +1,7 @@
 'use strict';
 
+const browser = require("webextension-polyfill");
+
 function runQuery(inputText, callback) {
   if (inputText === 'test') {
     runTestQuery(inputText, callback);
@@ -15,27 +17,25 @@ function runTestQuery(inputText, callback) {
   }, 1000);
 }
 
-function runOpenAIQuery(inputText, callback) {
-  chrome.runtime.sendMessage(
-    {
-      type: 'QUERY',
-      payload: {
-        query: inputText,
-      },
+async function runOpenAIQuery(inputText, callback) {
+  const message = {
+    type: 'QUERY',
+    payload: {
+      query: inputText,
     },
-    (response) => {
-      if (response?.error?.message) {
-        alert('OpenAI error message: ' + response.error.message);
-        callback();
-      } else if (response?.error?.code) {
-        alert('OpenAI error code: ' + response.error.code);
-        callback();
-      } else if (response?.choices?.length > 0) {
-        const text = response.choices[0]?.message?.content || inputText;
-        callback(text);
-      }
-    }
-  );
+  };
+  const response = await browser.runtime.sendMessage(message);
+  console.log("Got response", response);
+  if (response?.error?.message) {
+    alert('OpenAI error message: ' + response.error.message);
+    callback();
+  } else if (response?.error?.code) {
+    alert('OpenAI error code: ' + response.error.code);
+    callback();
+  } else if (response?.choices?.length > 0) {
+    const text = response.choices[0]?.message?.content || inputText;
+    callback(text);
+  }
 }
 
 function disableButton(convertButton) {
@@ -82,7 +82,7 @@ function writeToAceEditor(text) {
 
 function embedEditorHelperScript() {
   var s = document.createElement('script');
-  s.src = chrome.runtime.getURL('editor.js');
+  s.src = browser.runtime.getURL('editor.js');
   (document.head || document.documentElement).appendChild(s);
   s.onload = function() {
       s.remove();
