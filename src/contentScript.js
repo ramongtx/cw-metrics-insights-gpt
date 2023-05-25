@@ -93,6 +93,10 @@ function isInSQLEditorPage() {
   return document.getElementsByClassName('query-editor-ace').length > 0;
 }
 
+function convertButtonExist() {
+  return document.getElementsByClassName('submit-button-clone').length > 0;
+}
+
 function main() {
   const interval = setInterval(() => {
     if (!isInSQLEditorPage()) {
@@ -105,10 +109,9 @@ function main() {
     }
     aceEditor = aceEditor[0];
 
-    if (aceEditor) {
+    if (aceEditor && !convertButtonExist()) {
       const convertButton = createConvertButton();
       setupButtonListener(convertButton, aceEditor);
-      clearInterval(interval);
     }
   }, 1000);
 }
