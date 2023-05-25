@@ -1,6 +1,6 @@
 'use strict';
 
-const { PROMPT_SUBFIX, PROMPT_PREFIX } = require("./constants");
+const { PROMPT_SUFFIX, PROMPT_PREFIX } = require("./constants");
 const browser = require("webextension-polyfill");
 const { getApiKey } = require('./storage');
 
@@ -41,7 +41,7 @@ browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     const apiKey = await getApiKey();
     const userQuery = request.payload.query;
 
-    const prompt = `${PROMPT_PREFIX} ${userQuery} ${PROMPT_SUBFIX}`;
+    const prompt = `${PROMPT_PREFIX} ${userQuery} ${PROMPT_SUFFIX}`;
 
     const responseJson = await requestPrompt(apiKey, prompt);
     console.log("Prepared response", responseJson);

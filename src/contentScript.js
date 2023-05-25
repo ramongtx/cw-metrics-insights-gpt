@@ -63,12 +63,16 @@ function createConvertButton() {
 
 function setupButtonListener(convertButton, aceEditor) {
   convertButton.addEventListener('click', () => {
-    disableButton(convertButton)
-    runQuery(aceEditor.innerText.replace(/[\r\n]+/g,' '), (text) => {
+    const input = aceEditor.innerText.replace(/[\r\n]+/g,' ');
+    if (!input) {
+      return;
+    }
+    disableButton(convertButton);
+    runQuery(input, (text) => {
       if (text) {
         writeToAceEditor(text);
       }
-      enableButton(convertButton)
+      enableButton(convertButton);
     });
   });
 }
