@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "CloudWatch Metrics Gpt",
+  "name": "InsightsChat",
   "version": "1.0.0",
-  "description": "Chrome extension that generates CloudWatch Metrics Insights queries from ChatGPT prompts",
+  "description": "This project is a Chrome extension that integrates ChatGPT technology to generate CloudWatch Metrics Insights queries from natural language prompts. With this extension, users can easily create complex queries by simply typing a human-readable message and clicking the ‘Convert to query’ button. This makes it easier and more intuitive for users to interact with CloudWatch Metrics Insights and get the information they need without having to learn the query syntax. Our goal is to make it easier for users to monitor their AWS resources and gain insights into their performance by providing a user-friendly interface for generating CloudWatch Metrics Insights queries. ",
   "icons": {
     "16": "icons/icon_16.png",
     "32": "icons/icon_32.png",
@@ -29,7 +29,7 @@
   },
   "host_permissions": ["https://api.openai.com/*"],
   "action": {
-    "default_title": "CW Metrics Insight GPT",
+    "default_title": "CW Metrics Insights ChatGPT",
     "default_popup": "popup.html"
   },
   "permissions": [
