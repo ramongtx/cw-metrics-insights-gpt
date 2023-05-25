@@ -1,10 +1,12 @@
 'use strict';
 
 const { PROMPT_SUBFIX, PROMPT_PREFIX } = require("./constants");
+const browser = require("webextension-polyfill");
+const { getApiKey } = require('./storage');
 
 require("regenerator-runtime/runtime");
 
-async function requestPrompt(apiKey, prompt, callback) {
+async function requestPrompt(apiKey, prompt) {
   const openAiRequest = {
     model: "gpt-3.5-turbo",
     messages: [
@@ -31,21 +33,21 @@ async function requestPrompt(apiKey, prompt, callback) {
         },
     });
   const responseJson = await response.json();
-  callback(responseJson);
+  return responseJson;
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.type === 'QUERY') {
-    chrome.storage.sync.get(['apiKey'], (result) => {
-      const apiKey = result.apiKey;
-      const userQuery = request.payload.query;
+    const apiKey = await getApiKey();
+    const userQuery = request.payload.query;
 
-      const prompt = `${PROMPT_PREFIX} ${userQuery} ${PROMPT_SUBFIX}`;
+    const prompt = `${PROMPT_PREFIX} ${userQuery} ${PROMPT_SUBFIX}`;
 
-      requestPrompt(apiKey, prompt, (responseJson) => {
-        sendResponse(responseJson);
-      });
-    });
+    const responseJson = await requestPrompt(apiKey, prompt);
+    console.log("Prepared response", responseJson);
+    sendResponse(responseJson);
+    console.log("Sent response", responseJson);
+    return responseJson;
   }
-  return true;
+  return false;
 });
